@@ -375,7 +375,14 @@ def identify_best_matching_url(row, matches_scores, matching_columns, df_staging
                         'Best Match Content': match_row.iloc[0]['To']
                     })
 
-    best_match_info['Median Match Score'] = np.median(similarities) if similarities else None
+    # If no match found, assign a default URL (e.g., homepage)
+    if best_match_info['Highest Matching URL'] is None:
+        best_match_info['Highest Matching URL'] = df_staging['Address'].iloc[0]  # Use the first URL as default
+        best_match_info['Highest Similarity Score'] = 0
+        best_match_info['Best Match on'] = 'Default'
+        best_match_info['Best Match Content'] = 'No match found'
+
+    best_match_info['Median Match Score'] = np.median(similarities) if similarities else 0
     return best_match_info, similarities
 
 
@@ -894,6 +901,21 @@ def main():
                 df_final = handle_data_matching_and_processing(df_live, df_staging, address_column,
                                                                selected_additional_columns,
                                                                selected_model)
+
+                # Add a section to display statistics about URL mapping
+                st.subheader("URL Mapping Statistics")
+                total_old_urls = len(df_live)
+                unique_new_urls = df_final['Highest Matching URL'].nunique()
+                st.write(f"Total Old URLs: {total_old_urls}")
+                st.write(f"Unique New URLs Used: {unique_new_urls}")
+                st.write(f"Percentage of New URLs Used: {(unique_new_urls / len(df_staging)) * 100:.2f}%")
+
+                # Display URLs that are mapped multiple times
+                multiple_mapped = df_final['Highest Matching URL'].value_counts()
+                multiple_mapped = multiple_mapped[multiple_mapped > 1]
+                if not multiple_mapped.empty:
+                    st.subheader("New URLs Mapped Multiple Times")
+                    st.write(multiple_mapped)
 
     create_page_footer_with_contact_info()
 
