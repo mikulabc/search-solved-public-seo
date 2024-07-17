@@ -19,8 +19,8 @@ def setup_streamlit_interface():
     Configures the page layout, title, and adds creator information and instructions.
     """
     st.set_page_config(page_title="Automatic Website Migration Tool | LeeFoot.co.uk", layout="wide")
-    st.title("Automatic Website Migration Tool")
-    st.markdown("### Effortlessly migrate your website data")
+    st.title("Automatic Website Migration and URL Redirect Tool")
+    st.markdown("### Live URLs are the same as (Status 404 Error) URLs and Staging URLs the same as (Status 200 OK) URLs)")
 
     st.markdown(
         """
@@ -100,8 +100,8 @@ def create_page_footer_with_contact_info():
     """
     footer_html = (
         "<hr style='height:2px;border-width:0;color:gray;background-color:gray'>"
-        "<p style='font-style: italic;'>Need an app? Need this run as a managed service? "
-        "<a href='mailto:hello@leefoot.co.uk'>Hire Me!</a></p>"
+        "<p style='font-style: italic;'>"
+        "</p>"
     )
     st.markdown(footer_html, unsafe_allow_html=True)
 
